@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: html_head('Login Staf')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+    <header th:replace="~{fragments :: navbar}"></header>
+
+    <main class="container my-5 flex-grow-1 d-flex align-items-center justify-content-center">
+        <div class="row w-100 justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-custom p-4 shadow">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-shield-lock-fill text-primary" style="font-size: 3rem;"></i>
+                        <h4 class="fw-bold mt-2">Masuk Portal Staf</h4>
+                        <p class="text-muted small">Masukkan kredensial Anda untuk masuk ke sistem</p>
+                    </div>
+
+                    <!-- Authorization errors -->
+                    <div th:if="${param.error == 'unauthorized'}" class="alert alert-warning py-2 small" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Silakan login terlebih dahulu.
+                    </div>
+                    <div th:if="${param.error == 'forbidden'}" class="alert alert-danger py-2 small" role="alert">
+                        <i class="bi bi-x-circle-fill me-2"></i> Akses ditolak. Anda tidak memiliki izin.
+                    </div>
+                    <div th:if="${param.logout}" class="alert alert-info py-2 small" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i> Anda telah berhasil keluar sistem.
+                    </div>
+                    <div th:if="${error}" class="alert alert-danger py-2 small" role="alert">
+                        <i class="bi bi-x-circle-fill me-2"></i> <span th:text="${error}">Error</span>
+                    </div>
+
+                    <form th:action="@{/login}" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-semibold">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" required placeholder="admin / guru1">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" required placeholder="Masukkan password">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary-custom w-100 py-2 fw-semibold rounded-pill shadow-sm">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> MASUK
+                        </button>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <a href="/" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Kembali ke Beranda</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments :: footer}"></footer>
+    <script th:replace="~{fragments :: js}"></script>
+</body>
+</html>

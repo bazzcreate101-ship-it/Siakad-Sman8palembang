@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: html_head('Detail Rapor')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+    <header th:replace="~{fragments :: navbar}" class="d-print-none"></header>
+
+    <main class="container my-5 flex-grow-1">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Actions (Print, Back) -->
+                <div class="d-flex justify-content-between mb-4 d-print-none">
+                    <a href="/rapor/cari" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Kembali ke Pencarian</a>
+                    <button class="btn btn-primary-custom" onclick="window.print()"><i class="bi bi-printer-fill me-1"></i> Cetak Rapor</button>
+                </div>
+
+                <!-- Report Card Sheet -->
+                <div class="card p-5 border shadow-sm bg-white" id="rapor-sheet">
+                    <!-- School Header -->
+                    <div class="text-center mb-4 pb-3 border-bottom border-2">
+                        <h3 class="fw-bold mb-1">LAPORAN HASIL BELAJAR SISWA (RAPOR)</h3>
+                        <h5 class="text-secondary mb-0">SISKO ACADEMY</h5>
+                        <small class="text-muted">Tahun Ajaran 2025/2026 - Semester Genap</small>
+                    </div>
+
+                    <!-- Student Metadata -->
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr>
+                                    <td class="fw-semibold text-muted py-1" style="width: 35%;">Nama Lengkap</td>
+                                    <td class="py-1">: <span class="fw-bold" th:text="${rapor.siswa.namaLengkap}">Nama</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-semibold text-muted py-1">NISN</td>
+                                    <td class="py-1">: <span th:text="${rapor.siswa.nisn}">NISN</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-sm-6">
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr>
+                                    <td class="fw-semibold text-muted py-1" style="width: 35%;">Kelas</td>
+                                    <td class="py-1">: <span th:text="${rapor.siswa.kelas != null ? rapor.siswa.kelas.namaKelas : 'Belum Ditempatkan'}">Kelas</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-semibold text-muted py-1">Status Keaktifan</td>
+                                    <td class="py-1">: <span class="badge bg-success" th:text="${rapor.siswa.status}">AKTIF</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Grades Table -->
+                    <h5 class="fw-bold mb-3 border-bottom pb-2 text-primary"><i class="bi bi-award-fill me-1"></i> Nilai Capaian Hasil Belajar</h5>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 8%;">No</th>
+                                    <th class="text-start">Mata Pelajaran</th>
+                                    <th style="width: 15%;">Nilai Tugas</th>
+                                    <th style="width: 15%;">Nilai UTS</th>
+                                    <th style="width: 15%;">Nilai UAS</th>
+                                    <th style="width: 15%;" class="table-primary">Nilai Akhir</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="nilai, iterStat : ${rapor.listNilai}">
+                                    <td th:text="${iterStat.count}">1</td>
+                                    <td class="text-start fw-semibold" th:text="${nilai.mataPelajaran.namaMapel}">Matematika</td>
+                                    <td th:text="${#numbers.formatDecimal(nilai.tugas, 1, 1)}">80.0</td>
+                                    <td th:text="${#numbers.formatDecimal(nilai.uts, 1, 1)}">85.0</td>
+                                    <td th:text="${#numbers.formatDecimal(nilai.uas, 1, 1)}">90.0</td>
+                                    <td class="fw-bold table-primary" th:text="${#numbers.formatDecimal(nilai.nilaiAkhir, 1, 1)}">85.0</td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(rapor.listNilai)}">
+                                    <td colspan="6" class="text-muted py-3">Belum ada data nilai mata pelajaran untuk siswa ini.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Attendance and Comments -->
+                    <div class="row g-4 mb-5">
+                        <!-- Attendance Stats -->
+                        <div class="col-md-5">
+                            <h5 class="fw-bold mb-3 border-bottom pb-2 text-primary"><i class="bi bi-calendar-check-fill me-1"></i> Laporan Kehadiran</h5>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-semibold" style="width: 60%;">Hadir</td>
+                                        <td class="text-center fw-bold" th:text="${rapor.jumlahHadir}">0</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-semibold text-warning">Sakit</td>
+                                        <td class="text-center fw-bold text-warning" th:text="${rapor.jumlahSakit}">0</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-semibold text-info">Izin</td>
+                                        <td class="text-center fw-bold text-info" th:text="${rapor.jumlahIzin}">0</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-semibold text-danger">Tanpa Keterangan (Alpa)</td>
+                                        <td class="text-center fw-bold text-danger" th:text="${rapor.jumlahAlpa}">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Wali Kelas note -->
+                        <div class="col-md-7">
+                            <h5 class="fw-bold mb-3 border-bottom pb-2 text-primary"><i class="bi bi-chat-left-text-fill me-1"></i> Catatan Wali Kelas</h5>
+                            <div class="p-3 border rounded bg-light h-75 d-flex align-items-center">
+                                <p class="fst-italic text-secondary mb-0 th:text" th:text="${rapor.catatanWaliKelas}">Catatan wali kelas...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Signature block -->
+                    <div class="row mt-5 pt-4 text-center">
+                        <div class="col-6">
+                            <p class="mb-5">Orang Tua / Wali Siswa,</p>
+                            <br>
+                            <p class="fw-bold border-bottom d-inline-block px-5 mt-4">________________________</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="mb-5">Wali Kelas,</p>
+                            <br>
+                            <p class="fw-bold border-bottom d-inline-block px-5 mt-4" th:text="${rapor.siswa.kelas != null ? 'Guru Wali Kelas' : 'Kepala Sekolah'}">Nama Guru</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments :: footer}" class="d-print-none"></footer>
+    <script th:replace="~{fragments :: js}"></script>
+</body>
+</html>

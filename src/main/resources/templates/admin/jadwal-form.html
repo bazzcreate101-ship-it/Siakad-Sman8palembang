@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: html_head('Tambah Jadwal')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+    <header th:replace="~{fragments :: navbar}"></header>
+
+    <div class="container-fluid flex-grow-1">
+        <div class="row">
+            <!-- Sidebar -->
+            <div th:replace="~{fragments :: sidebar_admin('jadwal')}"></div>
+
+            <!-- Content Area -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+                    <h1 class="h2 fw-bold">Tambah Jadwal Pelajaran</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard">Admin</a></li>
+                            <li class="breadcrumb-item"><a href="/admin/jadwal">Jadwal</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Tambah</li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="card card-custom p-4 bg-white shadow-sm">
+                            <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="bi bi-calendar-plus-fill text-primary me-2"></i> Susun Jadwal Belajar</h5>
+
+                            <div th:if="${error}" class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${error}">Error</span>
+                            </div>
+
+                            <form th:action="@{/admin/jadwal/tambah}" method="post">
+                                <!-- Pilih Kelas -->
+                                <div class="mb-3">
+                                    <label for="kelasId" class="form-label fw-semibold">Pilih Kelas <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="kelasId" name="kelasId" required>
+                                        <option value="" disabled selected>-- Pilih Kelas --</option>
+                                        <option th:each="k : ${listKelas}" th:value="${k.id}" th:text="${k.namaKelas}">Kelas</option>
+                                    </select>
+                                </div>
+
+                                <!-- Pilih Mapel -->
+                                <div class="mb-3">
+                                    <label for="mataPelajaranId" class="form-label fw-semibold">Pilih Mata Pelajaran <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="mataPelajaranId" name="mataPelajaranId" required>
+                                        <option value="" disabled selected>-- Pilih Mapel --</option>
+                                        <option th:each="m : ${listMapel}" th:value="${m.id}" th:text="${m.namaMapel} + ' (' + ${m.kodeMapel} + ')'">Mapel</option>
+                                    </select>
+                                </div>
+
+                                <!-- Pilih Guru -->
+                                <div class="mb-3">
+                                    <label for="guruId" class="form-label fw-semibold">Pilih Guru Pengampu <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="guruId" name="guruId" required>
+                                        <option value="" disabled selected>-- Pilih Guru --</option>
+                                        <option th:each="g : ${listGuru}" th:value="${g.id}" th:text="${g.namaLengkap} + ' (NIP. ' + ${g.nip} + ')'">Guru</option>
+                                    </select>
+                                </div>
+
+                                <!-- Hari -->
+                                <div class="mb-3">
+                                    <label for="hari" class="form-label fw-semibold">Pilih Hari belajar <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="hari" name="hari" required>
+                                        <option value="" disabled selected>-- Pilih Hari --</option>
+                                        <option value="Senin">Senin</option>
+                                        <option value="Selasa">Selasa</option>
+                                        <option value="Rabu">Rabu</option>
+                                        <option value="Kamis">Kamis</option>
+                                        <option value="Jumat">Jumat</option>
+                                        <option value="Sabtu">Sabtu</option>
+                                    </select>
+                                </div>
+
+                                <!-- Jam Mulai & Selesai -->
+                                <div class="row g-3 mb-4">
+                                    <div class="col-6">
+                                        <label for="jamMulai" class="form-label fw-semibold">Jam Mulai <span class="text-danger">*</span></label>
+                                        <input type="time" class="form-control" id="jamMulai" name="jamMulai" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="jamSelesai" class="form-label fw-semibold">Jam Selesai <span class="text-danger">*</span></label>
+                                        <input type="time" class="form-control" id="jamSelesai" name="jamSelesai" required>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="/admin/jadwal" class="btn btn-light"><i class="bi bi-arrow-left"></i> Batal</a>
+                                    <button type="submit" class="btn btn-primary-custom px-4"><i class="bi bi-plus-lg"></i> Simpan Jadwal</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments :: footer}"></footer>
+    <script th:replace="~{fragments :: js}"></script>
+</body>
+</html>

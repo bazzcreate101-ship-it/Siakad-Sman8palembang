@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: html_head('Cek Status PPDB')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+    <header th:replace="~{fragments :: navbar}"></header>
+
+    <main class="container my-5 flex-grow-1">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <!-- Search Form -->
+                <div class="card card-custom p-4 mb-4">
+                    <h3 class="fw-bold mb-3"><i class="bi bi-search text-primary me-2"></i> Cek Status PPDB</h3>
+                    <p class="text-muted">Masukkan Nomor Induk Kependudukan (NIK) calon siswa yang didaftarkan.</p>
+                    
+                    <form th:action="@{/ppdb/status}" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="nik" placeholder="Masukkan 16 Digit NIK" required th:value="${param.nik}">
+                            <button class="btn btn-primary-custom" type="submit"><i class="bi bi-search"></i> Cari</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Alert Messages -->
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                    <span th:text="${error}">NIK tidak ditemukan</span>
+                </div>
+
+                <div th:if="${param.success}" class="alert alert-success" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Pendaftaran berhasil dikirim! Silakan simpan NIK Anda untuk memantau status secara berkala.
+                </div>
+
+                <!-- Result Card -->
+                <div th:if="${pendaftar}" class="card card-custom p-4 border-start border-4 shadow-sm"
+                     th:classappend="${pendaftar.statusPendaftaran == 'DITERIMA' ? 'border-success' : (pendaftar.statusPendaftaran == 'DITOLAK' ? 'border-danger' : 'border-warning')}">
+                    
+                    <h4 class="fw-bold mb-4">Hasil Pencarian Pendaftaran</h4>
+                    
+                    <table class="table table-borderless">
+                        <tr>
+                            <td class="text-muted fw-semibold py-1" style="width: 35%;">NIK</td>
+                            <td class="py-1">: <span th:text="${pendaftar.nik}">NIK</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-semibold py-1">Nama Lengkap</td>
+                            <td class="py-1">: <span th:text="${pendaftar.namaLengkap}">Nama</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-semibold py-1">Nama Orang Tua</td>
+                            <td class="py-1">: <span th:text="${pendaftar.namaOrangTua}">Orang tua</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-semibold py-1">Tanggal Daftar</td>
+                            <td class="py-1">: <span th:text="${pendaftar.tanggalLahir}">Tanggal lahir</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-semibold py-1">Status Seleksi</td>
+                            <td class="py-1">: 
+                                <span class="badge" th:classappend="${pendaftar.statusPendaftaran == 'DITERIMA' ? 'bg-success' : (pendaftar.statusPendaftaran == 'DITOLAK' ? 'bg-danger' : 'bg-warning text-dark')}"
+                                      th:text="${pendaftar.statusPendaftaran}">MENUNGGU VERIFIKASI</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="mt-4 p-3 rounded bg-light">
+                        <!-- If Waiting -->
+                        <div th:if="${pendaftar.statusPendaftaran == 'MENUNGGU_VERIFIKASI'}">
+                            <h6 class="fw-bold text-warning"><i class="bi bi-clock me-1"></i> Sedang Diproses</h6>
+                            <p class="small text-muted mb-0">Berkas pendaftaran Anda telah diterima di sistem kami. Pengumuman hasil seleksi akan diumumkan pada tanggal <strong th:text="${pengaturan.tanggalPengumuman}">tanggal</strong>.</p>
+                        </div>
+                        <!-- If Accepted -->
+                        <div th:if="${pendaftar.statusPendaftaran == 'DITERIMA'}">
+                            <h6 class="fw-bold text-success"><i class="bi bi-check2-circle me-1"></i> Selamat, Anda Diterima!</h6>
+                            <p class="small text-muted mb-0">Selamat! Anda dinyatakan lulus seleksi masuk. Data Anda telah dikonversi menjadi siswa aktif. Hubungi pihak sekolah untuk penempatan kelas dan administrasi lebih lanjut.</p>
+                        </div>
+                        <!-- If Rejected -->
+                        <div th:if="${pendaftar.statusPendaftaran == 'DITOLAK'}">
+                            <h6 class="fw-bold text-danger"><i class="bi bi-x-circle me-1"></i> Mohon Maaf</h6>
+                            <p class="small text-muted mb-0">Mohon maaf, berdasarkan hasil seleksi dan ketersediaan kuota, Anda dinyatakan tidak lulus seleksi masuk untuk tahun ajaran ini. Terima kasih telah mendaftar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments :: footer}"></footer>
+    <script th:replace="~{fragments :: js}"></script>
+</body>
+</html>

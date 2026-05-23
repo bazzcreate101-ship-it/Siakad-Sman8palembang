@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: html_head('Dashboard Admin')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+    <header th:replace="~{fragments :: navbar}"></header>
+
+    <div class="container-fluid flex-grow-1">
+        <div class="row">
+            <!-- Sidebar -->
+            <div th:replace="~{fragments :: sidebar_admin('dashboard')}"></div>
+
+            <!-- Content Area -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+                    <h1 class="h2 fw-bold">Dashboard Admin</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard">Admin</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <!-- Welcome Card -->
+                <div class="card card-custom p-4 mb-4 bg-white border-start border-primary border-4 shadow-sm">
+                    <h4 class="fw-bold mb-1">Selamat Datang Kembali, <span th:text="${session.currentUser.namaLengkap}">Admin</span>!</h4>
+                    <p class="text-muted mb-0">Di portal administrasi akademik sekolah. Anda memiliki kendali penuh atas manajemen data siswa, guru, kelas, mata pelajaran, jadwal, serta proses seleksi pendaftar baru (PPDB).</p>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="row g-4 mb-4">
+                    <!-- PPDB -->
+                    <div class="col-md-6 col-lg-4 col-xl-2.4">
+                        <div class="card card-custom p-3 border-0 bg-white shadow-sm d-flex flex-row align-items-center gap-3">
+                            <div class="bg-primary text-white p-3 rounded-3">
+                                <i class="bi bi-people-fill" style="font-size: 1.8rem;"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Pendaftar PPDB</small>
+                                <h3 class="fw-bold mb-0" th:text="${totalPendaftar}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Siswa Aktif -->
+                    <div class="col-md-6 col-lg-4 col-xl-2.4">
+                        <div class="card card-custom p-3 border-0 bg-white shadow-sm d-flex flex-row align-items-center gap-3">
+                            <div class="bg-success text-white p-3 rounded-3">
+                                <i class="bi bi-person-fill-check" style="font-size: 1.8rem;"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Siswa Aktif</small>
+                                <h3 class="fw-bold mb-0" th:text="${totalSiswa}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Guru -->
+                    <div class="col-md-6 col-lg-4 col-xl-2.4">
+                        <div class="card card-custom p-3 border-0 bg-white shadow-sm d-flex flex-row align-items-center gap-3">
+                            <div class="bg-warning text-white p-3 rounded-3">
+                                <i class="bi bi-person-video3" style="font-size: 1.8rem;"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Data Guru</small>
+                                <h3 class="fw-bold mb-0" th:text="${totalGuru}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Kelas -->
+                    <div class="col-md-6 col-lg-4 col-xl-2.4">
+                        <div class="card card-custom p-3 border-0 bg-white shadow-sm d-flex flex-row align-items-center gap-3">
+                            <div class="bg-info text-white p-3 rounded-3">
+                                <i class="bi bi-building" style="font-size: 1.8rem;"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Total Kelas</small>
+                                <h3 class="fw-bold mb-0" th:text="${totalKelas}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Mata Pelajaran -->
+                    <div class="col-md-6 col-lg-4 col-xl-2.4">
+                        <div class="card card-custom p-3 border-0 bg-white shadow-sm d-flex flex-row align-items-center gap-3">
+                            <div class="bg-danger text-white p-3 rounded-3">
+                                <i class="bi bi-journal-bookmark-fill" style="font-size: 1.8rem;"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Mata Pelajaran</small>
+                                <h3 class="fw-bold mb-0" th:text="${totalMapel}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shortcuts panel -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-custom p-4 bg-white shadow-sm">
+                            <h5 class="fw-bold mb-3 border-bottom pb-2">Aksi Cepat Manajemen</h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="/admin/ppdb" class="btn btn-outline-primary"><i class="bi bi-people me-1"></i> Verifikasi PPDB</a>
+                                <a href="/admin/siswa" class="btn btn-outline-success"><i class="bi bi-person-fill-check me-1"></i> Tempatkan Kelas Siswa</a>
+                                <a href="/admin/guru/tambah" class="btn btn-outline-warning"><i class="bi bi-person-plus me-1"></i> Tambah Guru Baru</a>
+                                <a href="/admin/kelas" class="btn btn-outline-info"><i class="bi bi-building me-1"></i> Kelola Kelas</a>
+                                <a href="/admin/jadwal/tambah" class="btn btn-outline-secondary"><i class="bi bi-calendar-plus me-1"></i> Susun Jadwal Belajar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments :: footer}"></footer>
+    <script th:replace="~{fragments :: js}"></script>
+</body>
+</html>

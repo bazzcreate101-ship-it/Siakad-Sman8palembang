@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: html_head('Pilih Kelas Absensi')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+    <header th:replace="~{fragments :: navbar}"></header>
+
+    <div class="container-fluid flex-grow-1">
+        <div class="row">
+            <!-- Sidebar -->
+            <div th:replace="~{fragments :: sidebar_guru('absensi')}"></div>
+
+            <!-- Content Area -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+                    <h1 class="h2 fw-bold">Input Absensi Siswa</h1>
+                </div>
+
+                <!-- Alert Messages -->
+                <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i> Presensi kehadiran siswa berhasil disimpan!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="card card-custom p-4 bg-white shadow-sm">
+                            <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="bi bi-calendar2-check-fill text-success me-2"></i> Pilih Kelas & Tanggal</h5>
+
+                            <form th:action="@{/guru/absensi/isi}" method="get">
+                                <!-- Pilih Kelas -->
+                                <div class="mb-3">
+                                    <label for="kelasId" class="form-label fw-semibold">Pilih Kelas <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="kelasId" name="kelasId" required>
+                                        <option value="" disabled selected>-- Pilih Kelas --</option>
+                                        <option th:each="k : ${listKelas}" th:value="${k.id}" th:text="${k.namaKelas}">Kelas</option>
+                                    </select>
+                                </div>
+
+                                <!-- Pilih Tanggal -->
+                                <div class="mb-4">
+                                    <label for="tanggal" class="form-label fw-semibold">Pilih Tanggal Presensi <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="tanggal" name="tanggal" required th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                                </div>
+
+                                <button type="submit" class="btn btn-success w-100 py-2"><i class="bi bi-arrow-right-circle-fill me-1"></i> Tampilkan Daftar Siswa</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments :: footer}"></footer>
+    <script th:replace="~{fragments :: js}"></script>
+</body>
+</html>
