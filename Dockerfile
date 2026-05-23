@@ -9,5 +9,7 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/app.jar app.jar
-EXPOSE 8080
+# Hugging Face Spaces requires port 7860
+EXPOSE 7860
+ENV PORT=7860
 ENTRYPOINT ["java", "-jar", "app.jar"]
