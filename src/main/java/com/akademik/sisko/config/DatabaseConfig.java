@@ -33,15 +33,21 @@ public class DatabaseConfig {
         String dbUrlEnv = System.getenv("DATABASE_URL");
         if (dbUrlEnv != null && (dbUrlEnv.startsWith("postgres://") || dbUrlEnv.startsWith("postgresql://"))) {
             try {
-                // Parse format: postgres://user:password@host:port/database
                 URI dbUri = new URI(dbUrlEnv);
                 String userInfo = dbUri.getUserInfo();
-                
                 String username = userInfo.split(":")[0];
                 String password = userInfo.split(":")[1];
-                
-                // Construct standard Spring JDBC postgresql URL
-                String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort() + dbUri.getPath();
+
+                int port = dbUri.getPort();
+                if (port == -1) {
+                    port = 5432;
+                }
+
+                String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + port + dbUri.getPath();
+                String query = dbUri.getQuery();
+                if (query != null && !query.isEmpty()) {
+                    dbUrl += "?" + query;
+                }
 
                 dataSource.setDriverClassName("org.postgresql.Driver");
                 dataSource.setUrl(dbUrl);
