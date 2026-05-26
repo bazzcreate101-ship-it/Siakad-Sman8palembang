@@ -73,9 +73,15 @@ public class AdminController {
     }
 
     @PostMapping("/ppdb/pengaturan")
-    public String ppdbPengaturanSave(@ModelAttribute PengaturanPPDB pengaturan) {
-        ppdbService.updatePengaturan(pengaturan);
-        return "redirect:/admin/ppdb?success_config=true";
+    public String ppdbPengaturanSave(@ModelAttribute PengaturanPPDB pengaturan, Model model) {
+        try {
+            ppdbService.updatePengaturan(pengaturan);
+            return "redirect:/admin/ppdb?success_config=true";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("pengaturan", pengaturan);
+            return "admin/ppdb-pengaturan";
+        }
     }
 
     // ==========================================

@@ -35,8 +35,43 @@ public class JadwalService {
 
     @Transactional
     public JadwalPelajaran saveJadwal(JadwalPelajaran jadwal) {
-        // Here we could add validation to prevent teacher or class time collision,
-        // but keeping it simple as per requirement.
+        // Ensure start time is before end time
+        if (jadwal.getJamMulai() == null || jadwal.getJamSelesai() == null 
+                || !jadwal.getJamMulai().isBefore(jadwal.getJamSelesai())) {
+            throw new IllegalArgumentException("Jam mulai harus lebih awal daripada jam selesai.");
+        }
+
+        // Validate scheduling collisions (teacher or class overlap)
+        List<JadwalPelajaran> allJadwal = jadwalRepository.findAll();
+        for (JadwalPelajaran jp : allJadwal) {
+            // Skip if it's the exact same entry (useful if editing an existing schedule)
+            if (jadwal.getId() != null && jadwal.getId().equals(jp.getId())) {
+                continue;
+            }
+
+            // Check if on the same day
+            if (jp.getHari().equalsIgnoreCase(jadwal.getHari())) {
+                // Check time overlap: start1 < end2 AND start2 < end1
+                boolean overlap = jadwal.getJamMulai().isBefore(jp.getJamSelesai()) 
+                        && jp.getJamMulai().isBefore(jadwal.getJamSelesai());
+                
+                if (overlap) {
+                    // Case 1: Class collision (same class cannot have overlapping schedules)
+                    if (jp.getKelas().getId().equals(jadwal.getKelas().getId())) {
+                        throw new IllegalArgumentException("Bentrok: Kelas " + jp.getKelas().getNamaKelas() 
+                                + " sudah memiliki jadwal pelajaran lain pada hari dan jam tersebut (" 
+                                + jp.getMataPelajaran().getNamaMapel() + " " + jp.getJamMulai() + " - " + jp.getJamSelesai() + ").");
+                    }
+                    
+                    // Case 2: Teacher collision (same teacher cannot teach overlapping schedules)
+                    if (jp.getGuru().getId().equals(jadwal.getGuru().getId())) {
+                        throw new IllegalArgumentException("Bentrok: Guru " + jp.getGuru().getNamaLengkap() 
+                                + " sudah mengajar di kelas lain (" + jp.getKelas().getNamaKelas() 
+                                + ") pada hari dan jam tersebut (" + jp.getJamMulai() + " - " + jp.getJamSelesai() + ").");
+                    }
+                }
+            }
+        }
         return jadwalRepository.save(jadwal);
     }
 

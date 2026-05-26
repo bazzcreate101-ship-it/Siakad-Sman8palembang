@@ -43,7 +43,27 @@ public class PPDBService {
 
     @Transactional
     public CalonSiswa daftar(CalonSiswa calonSiswa) {
-        if (calonSiswaRepository.findByNik(calonSiswa.getNik()).isPresent()) {
+        // NIK validation (16 digits)
+        if (calonSiswa.getNik() == null || !calonSiswa.getNik().trim().matches("\\d{16}")) {
+            throw new IllegalArgumentException("NIK harus berupa 16 digit angka.");
+        }
+        
+        // Name validation
+        if (calonSiswa.getNamaLengkap() == null || calonSiswa.getNamaLengkap().trim().isEmpty()) {
+            throw new IllegalArgumentException("Nama lengkap tidak boleh kosong.");
+        }
+
+        // Birthdate validation (in the past)
+        if (calonSiswa.getTanggalLahir() == null || calonSiswa.getTanggalLahir().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Tanggal lahir tidak valid (harus di masa lampau).");
+        }
+
+        // Telepon validation (10 to 15 digits)
+        if (calonSiswa.getTelepon() == null || !calonSiswa.getTelepon().trim().matches("\\d{10,15}")) {
+            throw new IllegalArgumentException("Nomor telepon tidak valid (harus 10-15 digit angka).");
+        }
+
+        if (calonSiswaRepository.findByNik(calonSiswa.getNik().trim()).isPresent()) {
             throw new IllegalArgumentException("NIK sudah terdaftar di sistem.");
         }
         
@@ -51,6 +71,7 @@ public class PPDBService {
             throw new IllegalStateException("Pendaftaran PPDB sedang ditutup.");
         }
 
+        calonSiswa.setNik(calonSiswa.getNik().trim());
         calonSiswa.setStatusPendaftaran("MENUNGGU_VERIFIKASI");
         return calonSiswaRepository.save(calonSiswa);
     }
@@ -111,6 +132,19 @@ public class PPDBService {
 
     @Transactional
     public PengaturanPPDB updatePengaturan(PengaturanPPDB newSettings) {
+        if (newSettings.getTanggalBuka() == null || newSettings.getTanggalTutup() == null || newSettings.getTanggalPengumuman() == null) {
+            throw new IllegalArgumentException("Semua tanggal pengaturan PPDB harus diisi.");
+        }
+        if (newSettings.getTanggalBuka().isAfter(newSettings.getTanggalTutup())) {
+            throw new IllegalArgumentException("Tanggal buka pendaftaran tidak boleh setelah tanggal tutup.");
+        }
+        if (newSettings.getTanggalTutup().isAfter(newSettings.getTanggalPengumuman())) {
+            throw new IllegalArgumentException("Tanggal tutup pendaftaran tidak boleh setelah tanggal pengumuman.");
+        }
+        if (newSettings.getKuota() == null || newSettings.getKuota() <= 0) {
+            throw new IllegalArgumentException("Kuota maksimal harus lebih besar dari 0.");
+        }
+
         PengaturanPPDB existing = getPengaturan();
         existing.setTanggalBuka(newSettings.getTanggalBuka());
         existing.setTanggalTutup(newSettings.getTanggalTutup());

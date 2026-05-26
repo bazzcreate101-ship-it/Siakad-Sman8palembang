@@ -360,13 +360,21 @@ public class DatabaseSeeder implements CommandLineRunner {
                 String namaL = pendaftarLaki[i];
                 String nikL = String.valueOf(extraBaseNik++);
                 LocalDate birthDateL = LocalDate.of(2010, 5, 10 + i);
-                calonSiswaRepository.save(new CalonSiswa(nikL, namaL, birthDateL, "Laki-laki", "Jl. Sudirman No. 100, Palembang", "Bapak Siswanto", "0812717100" + counter++, "MENUNGGU_VERIFIKASI"));
+                if (calonSiswaRepository.findByNik(nikL).isEmpty()) {
+                    calonSiswaRepository.save(new CalonSiswa(nikL, namaL, birthDateL, "Laki-laki", "Jl. Sudirman No. 100, Palembang", "Bapak Siswanto", "0812717100" + counter++, "MENUNGGU_VERIFIKASI"));
+                } else {
+                    counter++;
+                }
 
                 // Female
                 String namaP = pendaftarPerempuan[i];
                 String nikP = String.valueOf(extraBaseNik++);
                 LocalDate birthDateP = LocalDate.of(2010, 6, 12 + i);
-                calonSiswaRepository.save(new CalonSiswa(nikP, namaP, birthDateP, "Perempuan", "Jl. Demang Lebar Daun No. 22, Palembang", "Bapak Rudianto", "0812717100" + counter++, "MENUNGGU_VERIFIKASI"));
+                if (calonSiswaRepository.findByNik(nikP).isEmpty()) {
+                    calonSiswaRepository.save(new CalonSiswa(nikP, namaP, birthDateP, "Perempuan", "Jl. Demang Lebar Daun No. 22, Palembang", "Bapak Rudianto", "0812717100" + counter++, "MENUNGGU_VERIFIKASI"));
+                } else {
+                    counter++;
+                }
             }
 
             // 7 DITOLAK
@@ -376,20 +384,32 @@ public class DatabaseSeeder implements CommandLineRunner {
                     String namaP = pendaftarPerempuan[i - 1];
                     String nikP = String.valueOf(extraBaseNik++);
                     LocalDate birthDateP = LocalDate.of(2010, 7, 15);
-                    calonSiswaRepository.save(new CalonSiswa(nikP, namaP, birthDateP, "Perempuan", "Jl. Plaju No. 88, Palembang", "Bapak Suparjo", "0812717100" + counter++, "DITOLAK"));
+                    if (calonSiswaRepository.findByNik(nikP).isEmpty()) {
+                        calonSiswaRepository.save(new CalonSiswa(nikP, namaP, birthDateP, "Perempuan", "Jl. Plaju No. 88, Palembang", "Bapak Suparjo", "0812717100" + counter++, "DITOLAK"));
+                    } else {
+                        counter++;
+                    }
                     break;
                 }
                 // Male
                 String namaL = pendaftarLaki[i];
                 String nikL = String.valueOf(extraBaseNik++);
                 LocalDate birthDateL = LocalDate.of(2010, 8, 20 + i);
-                calonSiswaRepository.save(new CalonSiswa(nikL, namaL, birthDateL, "Laki-laki", "Jl. Veteran No. 5, Palembang", "Bapak Hardi", "0812717100" + counter++, "DITOLAK"));
+                if (calonSiswaRepository.findByNik(nikL).isEmpty()) {
+                    calonSiswaRepository.save(new CalonSiswa(nikL, namaL, birthDateL, "Laki-laki", "Jl. Veteran No. 5, Palembang", "Bapak Hardi", "0812717100" + counter++, "DITOLAK"));
+                } else {
+                    counter++;
+                }
 
                 // Female
                 String namaP = pendaftarPerempuan[i];
                 String nikP = String.valueOf(extraBaseNik++);
                 LocalDate birthDateP = LocalDate.of(2010, 9, 22 + i);
-                calonSiswaRepository.save(new CalonSiswa(nikP, namaP, birthDateP, "Perempuan", "Jl. Basuki Rahmat No. 74, Palembang", "Bapak Wahyudi", "0812717100" + counter++, "DITOLAK"));
+                if (calonSiswaRepository.findByNik(nikP).isEmpty()) {
+                    calonSiswaRepository.save(new CalonSiswa(nikP, namaP, birthDateP, "Perempuan", "Jl. Basuki Rahmat No. 74, Palembang", "Bapak Wahyudi", "0812717100" + counter++, "DITOLAK"));
+                } else {
+                    counter++;
+                }
             }
             System.out.println(">>> DatabaseSeeder: Additional 15 PPDB candidates seeded successfully.");
         }

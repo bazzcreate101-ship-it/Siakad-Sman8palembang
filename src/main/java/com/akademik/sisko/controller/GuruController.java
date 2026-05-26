@@ -52,15 +52,45 @@ public class GuruController {
     // 1. ABSENSI SISWA
     // ==========================================
     @GetMapping("/absensi")
-    public String absensiForm(Model model) {
-        model.addAttribute("listKelas", kelasService.getAllKelas());
+    public String absensiForm(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("currentUser");
+        if (!(user instanceof Guru)) {
+            return "redirect:/login";
+        }
+        Guru guru = (Guru) user;
+        List<JadwalPelajaran> listJadwal = jadwalService.getJadwalByGuru(guru.getId());
+        Set<Kelas> kelasSet = new LinkedHashSet<>();
+        for (JadwalPelajaran jp : listJadwal) {
+            kelasSet.add(jp.getKelas());
+        }
+        model.addAttribute("listKelas", kelasSet);
         return "guru/absensi-pilih";
     }
 
     @GetMapping("/absensi/isi")
     public String absensiIsi(@RequestParam Long kelasId,
                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate tanggal,
+                             HttpSession session,
                              Model model) {
+        User user = (User) session.getAttribute("currentUser");
+        if (!(user instanceof Guru)) {
+            return "redirect:/login";
+        }
+        Guru guru = (Guru) user;
+
+        // Validasi apakah guru ini mengajar kelas tersebut
+        List<JadwalPelajaran> listJadwal = jadwalService.getJadwalByGuru(guru.getId());
+        boolean teachesClass = false;
+        for (JadwalPelajaran jp : listJadwal) {
+            if (jp.getKelas().getId().equals(kelasId)) {
+                teachesClass = true;
+                break;
+            }
+        }
+        if (!teachesClass) {
+            return "redirect:/guru/absensi?error=unauthorized";
+        }
+
         Kelas kelas = kelasService.getKelasById(kelasId)
                 .orElseThrow(() -> new IllegalArgumentException("Kelas tidak ditemukan."));
 
@@ -83,7 +113,26 @@ public class GuruController {
     @PostMapping("/absensi/simpan")
     public String absensiSimpan(@RequestParam Long kelasId,
                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate tanggal,
-                                @RequestParam Map<String, String> allParams) {
+                                @RequestParam Map<String, String> allParams,
+                                HttpSession session) {
+        User user = (User) session.getAttribute("currentUser");
+        if (!(user instanceof Guru)) {
+            return "redirect:/login";
+        }
+        Guru guru = (Guru) user;
+
+        // Validasi apakah guru ini mengajar kelas tersebut
+        List<JadwalPelajaran> listJadwal = jadwalService.getJadwalByGuru(guru.getId());
+        boolean teachesClass = false;
+        for (JadwalPelajaran jp : listJadwal) {
+            if (jp.getKelas().getId().equals(kelasId)) {
+                teachesClass = true;
+                break;
+            }
+        }
+        if (!teachesClass) {
+            return "redirect:/guru/absensi?error=unauthorized";
+        }
         
         Map<Long, String> statusMap = new HashMap<>();
         for (Map.Entry<String, String> entry : allParams.entrySet()) {
@@ -101,16 +150,50 @@ public class GuruController {
     // 2. NILAI SISWA
     // ==========================================
     @GetMapping("/nilai")
-    public String nilaiForm(Model model) {
-        model.addAttribute("listKelas", kelasService.getAllKelas());
-        model.addAttribute("listMapel", mataPelajaranService.getAllMataPelajaran());
+    public String nilaiForm(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("currentUser");
+        if (!(user instanceof Guru)) {
+            return "redirect:/login";
+        }
+        Guru guru = (Guru) user;
+        List<JadwalPelajaran> listJadwal = jadwalService.getJadwalByGuru(guru.getId());
+
+        Set<Kelas> kelasSet = new LinkedHashSet<>();
+        Set<MataPelajaran> mapelSet = new LinkedHashSet<>();
+        for (JadwalPelajaran jp : listJadwal) {
+            kelasSet.add(jp.getKelas());
+            mapelSet.add(jp.getMataPelajaran());
+        }
+
+        model.addAttribute("listKelas", kelasSet);
+        model.addAttribute("listMapel", mapelSet);
         return "guru/nilai-pilih";
     }
 
     @GetMapping("/nilai/isi")
     public String nilaiIsi(@RequestParam Long kelasId,
                            @RequestParam Long mapelId,
+                           HttpSession session,
                            Model model) {
+        User user = (User) session.getAttribute("currentUser");
+        if (!(user instanceof Guru)) {
+            return "redirect:/login";
+        }
+        Guru guru = (Guru) user;
+
+        // Validasi apakah guru mengajar mata pelajaran ini di kelas ini
+        List<JadwalPelajaran> listJadwal = jadwalService.getJadwalByGuru(guru.getId());
+        boolean teachesSubjectInClass = false;
+        for (JadwalPelajaran jp : listJadwal) {
+            if (jp.getKelas().getId().equals(kelasId) && jp.getMataPelajaran().getId().equals(mapelId)) {
+                teachesSubjectInClass = true;
+                break;
+            }
+        }
+        if (!teachesSubjectInClass) {
+            return "redirect:/guru/nilai?error=unauthorized";
+        }
+
         Kelas kelas = kelasService.getKelasById(kelasId)
                 .orElseThrow(() -> new IllegalArgumentException("Kelas tidak ditemukan."));
         MataPelajaran mapel = mataPelajaranService.getMataPelajaranById(mapelId)
@@ -138,7 +221,26 @@ public class GuruController {
                               @RequestParam List<Long> siswaIds,
                               @RequestParam List<Double> tugas,
                               @RequestParam List<Double> uts,
-                              @RequestParam List<Double> uas) {
+                              @RequestParam List<Double> uas,
+                              HttpSession session) {
+        User user = (User) session.getAttribute("currentUser");
+        if (!(user instanceof Guru)) {
+            return "redirect:/login";
+        }
+        Guru guru = (Guru) user;
+
+        // Validasi apakah guru mengajar mata pelajaran ini di kelas ini
+        List<JadwalPelajaran> listJadwal = jadwalService.getJadwalByGuru(guru.getId());
+        boolean teachesSubjectInClass = false;
+        for (JadwalPelajaran jp : listJadwal) {
+            if (jp.getKelas().getId().equals(kelasId) && jp.getMataPelajaran().getId().equals(mapelId)) {
+                teachesSubjectInClass = true;
+                break;
+            }
+        }
+        if (!teachesSubjectInClass) {
+            return "redirect:/guru/nilai?error=unauthorized";
+        }
 
         for (int i = 0; i < siswaIds.size(); i++) {
             Long siswaId = siswaIds.get(i);

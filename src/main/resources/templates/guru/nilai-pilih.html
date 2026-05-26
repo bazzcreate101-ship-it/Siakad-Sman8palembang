@@ -22,6 +22,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
+                <div th:if="${param.error == 'unauthorized'}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Anda tidak memiliki wewenang untuk mengisi nilai di kelas atau mata pelajaran tersebut!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
                 <div class="row justify-content-center">
                     <div class="col-lg-6">
                         <div class="card card-custom p-4 bg-white shadow-sm">
