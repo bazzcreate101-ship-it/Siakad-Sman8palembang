@@ -1,7 +1,9 @@
 package com.akademik.sisko.service;
 
 import com.akademik.sisko.model.Guru;
+import com.akademik.sisko.model.JadwalPelajaran;
 import com.akademik.sisko.repository.GuruRepository;
+import com.akademik.sisko.repository.JadwalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +14,11 @@ import java.util.Optional;
 public class GuruService {
 
     private final GuruRepository guruRepository;
+    private final JadwalRepository jadwalRepository;
 
-    public GuruService(GuruRepository guruRepository) {
+    public GuruService(GuruRepository guruRepository, JadwalRepository jadwalRepository) {
         this.guruRepository = guruRepository;
+        this.jadwalRepository = jadwalRepository;
     }
 
     public List<Guru> getAllGuru() {
@@ -39,6 +43,10 @@ public class GuruService {
 
     @Transactional
     public void deleteGuru(Long id) {
+        // Cascade delete teacher's class schedule entries
+        List<JadwalPelajaran> jadwalList = jadwalRepository.findByGuruId(id);
+        jadwalRepository.deleteAll(jadwalList);
+
         guruRepository.deleteById(id);
     }
 }

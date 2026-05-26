@@ -179,7 +179,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     // Male Student
                     String namaL = namaSiswaLaki[classIndex * 4 + i];
                     String nikL = String.valueOf(baseNik++);
-                    String nisnL = "00" + baseNisn++;
+                    String nisnL = "0" + baseNisn++;
                     LocalDate birthDateL = LocalDate.of(birthYear, ((studentCount % 12) + 1), ((studentCount % 28) + 1));
                     String alamatL = alamatPalembang[studentCount % alamatPalembang.length];
                     String bapakL = namaBapak[studentCount % namaBapak.length];
@@ -200,7 +200,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     // Female Student
                     String namaP = namaSiswaPerempuan[classIndex * 4 + i];
                     String nikP = String.valueOf(baseNik++);
-                    String nisnP = "00" + baseNisn++;
+                    String nisnP = "0" + baseNisn++;
                     LocalDate birthDateP = LocalDate.of(birthYear, ((studentCount % 12) + 1), ((studentCount % 28) + 1));
                     String alamatP = alamatPalembang[studentCount % alamatPalembang.length];
                     String bapakP = namaBapak[studentCount % namaBapak.length];
