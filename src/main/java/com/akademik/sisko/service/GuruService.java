@@ -1,9 +1,12 @@
 package com.akademik.sisko.service;
 
-import com.akademik.sisko.model.Guru;
 import com.akademik.sisko.model.JadwalPelajaran;
-import com.akademik.sisko.repository.GuruRepository;
 import com.akademik.sisko.repository.JadwalRepository;
+
+import com.akademik.sisko.model.Guru;
+import com.akademik.sisko.repository.GuruRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,16 @@ public class GuruService {
 
     public List<Guru> getAllGuru() {
         return guruRepository.findAll();
+    }
+
+    // Pagination for all guru entries
+    public Page<Guru> getGuruPage(int page, int size) {
+        return guruRepository.findAll(PageRequest.of(page, size));
+    }
+
+    // Search with pagination on namaLengkap
+    public Page<Guru> searchGuru(String keyword, int page, int size) {
+        return guruRepository.findByNamaLengkapContainingIgnoreCase(keyword, PageRequest.of(page, size));
     }
 
     public Optional<Guru> getGuruById(Long id) {
