@@ -1,76 +1,118 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: html_head('Beranda')}"></head>
+<head th:replace="~{fragments :: html_head('Beranda')}"
+      >
+</head>
 <body class="d-flex flex-column min-vh-100">
 
+    <!-- Navbar -->
     <header th:replace="~{fragments :: navbar}"></header>
 
-    <main class="container my-5 flex-grow-1">
-        <!-- Hero Section -->
-        <div class="p-5 mb-5 rounded-4 shadow-sm text-white" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold">Selamat Datang di SISKO Academy</h1>
-                    <p class="lead mb-4">Sistem Informasi Akademik Sekolah Terintegrasi. Mengelola data akademik mulai dari Penerimaan Peserta Didik Baru (PPDB), pengelolaan kelas, absensi, hingga penginputan nilai dan penerbitan rapor secara digital.</p>
-                    
-                    <div class="d-flex flex-wrap gap-3">
-                        <a th:if="${isPPDBBuka}" href="/ppdb/daftar" class="btn btn-warning btn-lg px-4 fw-bold rounded-pill text-dark shadow-sm">
-                            <i class="bi bi-box-arrow-in-up-right me-2"></i> Daftar PPDB Sekarang
-                        </a>
-                        <span th:unless="${isPPDBBuka}" class="btn btn-secondary btn-lg px-4 fw-bold rounded-pill disabled shadow-sm">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i> PPDB Sedang Ditutup
-                        </span>
-                        <a href="/ppdb/status" class="btn btn-outline-light btn-lg px-4 rounded-pill">
-                            <i class="bi bi-search me-2"></i> Cek Status Pendaftaran
-                        </a>
-                    </div>
+    <!-- Hero Section -->
+    <section class="bg-dark text-white" style="background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/SMA_Negeri_8_Palembang.JPG/1200px-SMA_Negeri_8_Palembang.JPG') no-repeat center center; background-size: cover;">
+        <div class="container py-5 text-center">
+            <h1 class="display-4 fw-bold">SMA Negeri 8 Palembang</h1>
+            <p class="lead mb-4">Sistem Informasi Akademik Sekolah SMA Negeri 8 Palembang</p>
+            <p class="mb-5">SMA Negeri 8 Palembang, berdiri sejak 1972, berlokasi di Jl. Duyudono, Palembang. Kami menerapkan Kurikulum 2013, terakreditasi "A", dan memiliki komitmen kuat dalam pencapaian pendidikan berkualitas.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="/ppdb/daftar" class="btn btn-warning btn-lg text-dark fw-bold">Daftar PPDB</a>
+                <a href="/login" class="btn btn-outline-light btn-lg">Masuk SIAKAD</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Informasi Sekolah -->
+    <section class="container py-5">
+        <h2 class="fw-bold text-center mb-4">Informasi Sekolah</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <ul class="list-unstyled">
+                    <li><strong>Jenis:</strong> Sekolah Menengah Atas Negeri</li>
+                    <li><strong>Lokasi:</strong> Jl. Duyudono No.1, Palembang</li>
+                    <li><strong>Kurikulum:</strong> Kurikulum 2013 (K-13)</li>
+                    <li><strong>Akreditasi:</strong> A</li>
+                    <li><strong>Visi:</strong> Menjadi SMA unggulan yang menghasilkan generasi berkarakter, kompetitif, dan berwawasan global.</li>
+                    <li><strong>Misi:</strong>
+                        <ol class="ms-3">
+                            <li>Menyelenggarakan pembelajaran inovatif yang berbasis teknologi.</li>
+                            <li>Mengembangkan potensi optimal siswa melalui kegiatan ekstrakurikuler.</li>
+                            <li>Meningkatkan kualitas guru melalui pelatihan dan penelitian.</li>
+                            <li>Membangun kemitraan dengan dunia industri dan perguruan tinggi.</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/SMA_Negeri_8_Palembang.JPG/800px-SMA_Negeri_8_Palembang.JPG" class="img-fluid rounded shadow" alt="Fasilitas SMA Negeri 8 Palembang">
+            </div>
+        </div>
+    </section>
+
+    <!-- Fasilitas -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <h2 class="fw-bold text-center mb-4">Fasilitas</h2>
+            <div class="row g-4">
+                <div class="col-md-4 text-center">
+                    <i class="bi bi-building" style="font-size: 2rem; color:#2563eb;"></i>
+                    <h5 class="mt-2">Gedung Modern</h5>
+                    <p>Kelas ber-AC, laboratorium komputer, laboratorium bahasa.
+                    </p>
                 </div>
-                <div class="col-lg-4 text-center d-none d-lg-block">
-                    <i class="bi bi-mortarboard" style="font-size: 8rem; color: rgba(255, 255, 255, 0.8);"></i>
+                <div class="col-md-4 text-center">
+                    <i class="bi bi-book" style="font-size: 2rem; color:#2563eb;"></i>
+                    <h5 class="mt-2">Perpustakaan</h5>
+                    <p>Ruang baca nyaman dengan koleksi buku terbaru.
+                    </p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <i class="bi bi-people" style="font-size: 2rem; color:#2563eb;"></i>
+                    <h5 class="mt-2">Olahraga</h5>
+                    <p>Lapangan sepakbola, basket, serta fasilitas olah raga umum.
+                    </p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Features Grid -->
-        <div class="row g-4 justify-content-center">
-            <!-- Card PPDB -->
-            <div class="col-md-4">
-                <div class="card card-custom h-100 p-4">
-                    <div class="text-primary mb-3">
-                        <i class="bi bi-person-fill-add" style="font-size: 2.5rem;"></i>
-                    </div>
-                    <h4 class="card-title fw-bold">Penerimaan Siswa (PPDB)</h4>
-                    <p class="card-text text-muted">Bagi calon siswa baru, lakukan pendaftaran mandiri dengan mengisi data NIK, nama lengkap, alamat, data orang tua, dan nomor telepon secara praktis.</p>
-                    <a href="/ppdb/status" class="mt-auto text-decoration-none fw-semibold">Cek Status Pendaftaran <i class="bi bi-arrow-right"></i></a>
-                </div>
+    <!-- Ekstrakurikuler -->
+    <section class="container py-5">
+        <h2 class="fw-bold text-center mb-4">Ekstrakurikuler</h2>
+        <div class="row g-4">
+            <div class="col-md-3 text-center">
+                <i class="bi bi-music-note-beamed" style="font-size: 1.8rem; color:#2563eb;"></i>
+                <h6 class="mt-2">Paduan Suara</h6>
             </div>
-
-            <!-- Card Rapor Digital -->
-            <div class="col-md-4">
-                <div class="card card-custom h-100 p-4">
-                    <div class="text-success mb-3">
-                        <i class="bi bi-file-earmark-bar-graph-fill" style="font-size: 2.5rem;"></i>
-                    </div>
-                    <h4 class="card-title fw-bold">Pencarian Rapor Siswa</h4>
-                    <p class="card-text text-muted">Siswa dan Wali Murid dapat melihat rekapitulasi nilai akhir mata pelajaran dan rekap absensi kehadiran secara transparan cukup dengan memasukkan NISN dan Tanggal Lahir.</p>
-                    <a href="/rapor/cari" class="mt-auto text-decoration-none fw-semibold text-success">Lihat Rapor Digital <i class="bi bi-arrow-right"></i></a>
-                </div>
+            <div class="col-md-3 text-center">
+                <i class="bi bi-basketball" style="font-size: 1.8rem; color:#2563eb;"></i>
+                <h6 class="mt-2">Basket</h6>
             </div>
+            <div class="col-md-3 text-center">
+                <i class="bi bi-brush" style="font-size: 1.8rem; color:#2563eb;"></i>
+                <h6 class="mt-2">Seni Rupa</h6>
+            </div>
+            <div class="col-md-3 text-center">
+                <i class="bi bi-code-slash" style="font-size: 1.8rem; color:#2563eb;"></i>
+                <h6 class="mt-2">Klub IT</h6>
+            </div>
+        </div>
+    </section>
 
-            <!-- Card Staf Portal -->
-            <div class="col-md-4">
-                <div class="card card-custom h-100 p-4">
-                    <div class="text-warning mb-3">
-                        <i class="bi bi-shield-lock-fill" style="font-size: 2.5rem;"></i>
-                    </div>
-                    <h4 class="card-title fw-bold">Portal Staf & Guru</h4>
-                    <p class="card-text text-muted">Portal masuk bagi Administrator untuk mengelola administrasi sekolah, dan bagi Guru untuk menginput absensi harian siswa serta nilai tugas/UTS/UAS siswa.</p>
-                    <a href="/login" class="mt-auto text-decoration-none fw-semibold text-warning">Masuk Portal Staf <i class="bi bi-arrow-right"></i></a>
+    <!-- Kontak -->
+    <section class="bg-dark text-white py-5">
+        <div class="container">
+            <h2 class="fw-bold text-center mb-4">Hubungi Kami</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <p><i class="bi bi-geo-alt-fill me-2"></i>Jl. Duyudono No.1, Palembang, Sumatera Selatan 30153</p>
+                    <p><i class="bi bi-telephone-fill me-2"></i> (0711) 123 456</p>
+                    <p><i class="bi bi-envelope-fill me-2"></i> info@sman8palembang.sch.id</p>
                 </div>
             </div>
         </div>
-    </main>
+    </section>
 
+    <!-- Footer -->
     <footer th:replace="~{fragments :: footer}"></footer>
     <script th:replace="~{fragments :: js}"></script>
 </body>
